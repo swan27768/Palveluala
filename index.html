@@ -593,7 +593,7 @@ tarea,
       exit.textContent = "Poistu";
       exit.onclick = () => {
         if (confirm("Haluatko varmasti poistua tehtävästä?")) {
-          Engine.play("Start");
+          Engine.play("start");
         }
       };
 
@@ -1176,6 +1176,7 @@ Voit käyttää apuna koulun materiaaleja, nettiä tai kysyä opettajalta.
 &lt;h2&gt;Esitelmä ammatista: $ammatti&lt;/h2&gt;
 
 &lt;p&gt;Täytä alle tiedot valitsemastasi ammatista.&lt;/p&gt;
+&lt;p&gt;Vastaa kohtiin mahdollisimman konkreettisesti ja &lt;strong&gt;omin sanoin&lt;/strong&gt;. &lt;br&gt;Lopuksi saat vastauksistasi yhteenvedon, jonka voit ladata tiedostona ja kopioida Google Docsiin tai Google Slidesiin viimeistelyä varten.&lt;/p&gt;
 
 &lt;div class=&quot;lomake-ryhma&quot;&gt;
 &lt;p&gt;&lt;strong&gt;Mitä tässä ammatissa tehdään?&lt;/strong&gt;&lt;/p&gt;
@@ -1215,7 +1216,13 @@ Olet pohtinut omaa kiinnostustasi palvelualan ammatteihin. Voit näyttää vasta
 
 &lt;div class=&quot;intro-nappi&quot;&gt;
   [[Tutustu oppilatoksiin-&gt;Oppilaitokset]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="31" name="Oppilaitokset" tags="" position="850,325" size="100,100">:: Oppilaitokset
+  
+  &lt;a href=&quot;javascript:void(0)&quot;
+   class=&quot;macro-link btn--danger&quot;
+   onclick=&quot;window.close();&quot;&gt;
+   Poistu
+&lt;/a&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="31" name="Oppilaitokset" tags="" position="850,325" size="100,100">
 &lt;h2&gt;Palvelualan koulutukset&lt;/h2&gt;
 
 &lt;p&gt;
