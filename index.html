@@ -558,6 +558,41 @@ tarea,
 #passages .passage .cover-link {
   text-decoration: none !important;
 }
+/* ===== GOOGLE SITES FULL SANDBOX FIX ===== */
+iframe {
+  all: initial !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* pakota oma layout takaisin iframeen */
+iframe * {
+  all: revert !important;
+}
+
+/* nappien täydellinen uudelleenmäärittely iframe-tilassa */
+iframe #passages .intro-nappi,
+iframe #passages .answer-group {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  width: auto !important;
+}
+
+iframe #passages a {
+  display: inline-flex !important;
+  width: auto !important;
+  min-width: 140px !important;
+  max-width: max-content !important;
+  padding: 0.75rem 1.6rem !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  border-radius: 999px !important;
+}
 </style><script role="script" id="twine-user-script" type="text/twine-javascript">(function () {
   "use strict";
 
@@ -717,19 +752,12 @@ window.confirmExitStory = function () {
 </tw-passagedata><tw-passagedata pid="3" name="start" tags="" position="600,100" size="100,100">&lt;&lt;script&gt;&gt;
 $(&#39;body&#39;).removeClass(&#39;hide-navbar&#39;);
 &lt;&lt;/script&gt;&gt;
-
 &lt;div class=&quot;quiz-page&quot;&gt;
   &lt;h1&gt;PALVELUALA&lt;/h1&gt;
   &lt;hr&gt;
-
   &lt;p&gt;
-Palveluala on laaja ammattiala, jossa työtehtävät liittyvät erilaisten palveluiden tuottamiseen ihmisille ja yrityksille. Alan ammattilaisia työskentelee muun muassa matkailun, logistiikan, ruokapalvelun, hotelli- ja ravintola-alan, kotitalous- ja kuluttajapalveluiden sekä puhdistus- ja kiinteistöalan tehtävissä.
+Palveluala on laaja ammattiala, jossa työtehtävät liittyvät erilaisten palveluiden tuottamiseen ihmisille ja yrityksille. Työpaikkoja ovat esimerkiksi matkailuyritykset, ruokalat, hotellit, ravintolat, pitopalvelu- ja siivousyritykset, kiinteistöhuoltoyritykset sekä kuljetus- ja logistiikka-alan yritykset.  Alalla korostuvat palveluhenkisyys, joustavuus, luotettavuus ja kyky toimia erilaisten ihmisten kanssa. Kielitaito on eduksi, samoin hyvä fyysinen kunto.
   &lt;/p&gt;
-
-  &lt;p&gt;
-Työpaikkoja ovat esimerkiksi matkailuyritykset, ruokalat, hotellit, ravintolat, pitopalvelu- ja siivousyritykset, kiinteistöhuoltoyritykset sekä kuljetus- ja logistiikka-alan yritykset.  Alalla korostuvat palveluhenkisyys, joustavuus, luotettavuus ja kyky toimia erilaisten ihmisten kanssa. Kielitaito on eduksi, samoin hyvä fyysinen kunto.
-  &lt;/p&gt;
-
   &lt;div class=&quot;intro-nappi&quot;&gt;
     [[Sopiiko palveluala sinulle? – Testaa tästä-&gt;Ammattitesti: alku]]
   &lt;/div&gt;
