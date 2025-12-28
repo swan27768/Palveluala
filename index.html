@@ -702,7 +702,12 @@ window.confirmExitStory = function () {
     window.close();
   }
 };
-</script><tw-passagedata pid="1" name="StoryInit" tags="" position="725,50" size="100,100">&lt;&lt;set $score = 0&gt;&gt;
+</script><tw-passagedata pid="1" name="StoryInit" tags="" position="725,50" size="100,100">&lt;&lt;script&gt;&gt;
+State.reset();
+Engine.play(&quot;start&quot;);
+&lt;&lt;/script&gt;&gt;
+
+&lt;&lt;set $score = 0&gt;&gt;
 
 &lt;&lt;set $hideNavbar = true&gt;&gt;
 &lt;&lt;set $hideNavbar = false&gt;&gt;
@@ -787,6 +792,10 @@ Tässä testissä vastaat kysymyksiin, jotka liittyvät elintarvikealaan ja siel
   &lt;&lt;/button&gt;&gt;
 &lt;/div&gt;
 </tw-passagedata><tw-passagedata pid="6" name="Kansi" tags="" position="475,75" size="100,100">&lt;&lt;script&gt;&gt;
+State.reset();
+&lt;&lt;/script&gt;&gt;
+
+&lt;&lt;script&gt;&gt;
 $(&#39;body&#39;).removeClass(&#39;hide-navbar&#39;);
 &lt;&lt;/script&gt;&gt;
 
