@@ -594,105 +594,148 @@ iframe #passages a {
   white-space: nowrap !important;
   border-radius: 999px !important;
 }
-</style><script role="script" id="twine-user-script" type="text/twine-javascript">(function () {
+/* ========= KIRJOITUSKENTTIEN TEKSTI MUSTAKSI ========= */
+
+#passages textarea,
+#passages input[type="text"] {
+  color: #000000 !important;
+  caret-color: #000000 !important;
+}
+.action-row {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  flex-wrap: nowrap !important;
+}
+/* ============================
+   INFO-TEXT – OPETUSKORTTI
+   ============================ */
+
+#passages .info-text {
+  background: #ffffff;
+  border: 1px solid #C7D3DD;          /* sama sävy kuin card-border */
+  border-radius: 14px;
+  padding: 0.9rem 1.1rem;
+  margin: 1.2rem auto;
+  max-width: 720px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+#passages .info-text p {
+  margin: 0 0 0.6rem 0;
+  font-size: 0.95rem;
+  color: #1F2A33;                     /* sama kuin text-main */
+}
+</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* ========= PALVELUALA NAVBAR (GOOGLE SITES SAFE) ========= */
+
+$(document).on(":passagestart", function (event) {
+  if (!event || !event.passage) return;
+  const tags = event.passage.tags || [];
+
+  // Piilota navbar kansisivulla
+  if (tags.includes("cover")) document.body.classList.add("hide-navbar");
+  else document.body.classList.remove("hide-navbar");
+
+  // Luo navbar vain kerran
+  if (!document.querySelector(".navbar-fixed")) {
+
+    const nav = document.createElement("div");
+    nav.className = "navbar-fixed";
+
+    // Takaisin-nappi
+    const back = document.createElement("button");
+    back.className = "btn";
+    back.textContent = "← Takaisin";
+    back.onclick = () => Engine.backward();
+
+    // Poistu-nappi → Kansi
+    const exit = document.createElement("button");
+    exit.className = "btn btn--danger";
+    exit.textContent = "Poistu";
+    exit.onclick = () => Engine.play("Kansi");
+
+    nav.append(back, exit);
+    document.body.appendChild(nav);
+  }
+});
+
+
+
+(function () {
   "use strict";
 
-  $(document).on(":passagestart", function (event) {
-    if (!event || !event.passage) return;
+  const AUTOSAVE_KEY = "palveluala_ammatti_autosave_v1";
 
-    const body = document.body;
-    const name = event.passage.name;
-    const tags = event.passage.tags || [];
+  /* ========= LATAA TXT ========= */
+  window.downloadAmmattitutkimus = function () {
+    const v = State.variables;
 
-    /* KANSISIVU */
-    if (tags.includes("cover")) {
-      body.classList.add("hide-navbar");
-      return;
-    }
+    const text =
+`ESITELMÄ AMMATISTA: ${v.ammatti || ""}
 
-    /* MUUT SIVUT */
-    body.classList.remove("hide-navbar");
+1. MITÄ TÄSSÄ TYÖSSÄ TEHDÄÄN:
+${v.tyotehtavat || ""}
 
-    if (!document.querySelector(".navbar-fixed")) {
-      const nav = document.createElement("div");
-      nav.className = "navbar-fixed";
+2. MISSÄ TÖITÄ TEHDÄÄN:
+${v.tyopaikat || ""}
 
-      const back = document.createElement("button");
-      back.className = "btn";
-      back.textContent = "← Takaisin";
-      back.onclick = () => {
-        if (State.length > 0) Engine.backward();
-      };
+3. MILLAISTA TYÖAIKA ON:
+${v.tyoajat || ""}
 
-      const exit = document.createElement("button");
-      exit.className = "btn btn--danger";
-      exit.textContent = "Poistu";
-      exit.onclick = () => {
-        if (confirm("Haluatko varmasti poistua tehtävästä?")) {
-          Engine.play("start");
-        }
-      };
+4. MISSÄ TÄTÄ AMMATTIA VOI OPISKELLA:
+${v.opiskelupaikat || ""}
 
-      nav.append(back, exit);
-      document.body.appendChild(nav);
-    }
-  });
+5. MIKSI TÄMÄ AMMATTI KIINNOSTAA MINUA:
+${v.omaPerustelu || ""}
+
+------------------------------
+Palvelualan ammattitehtävä.`;
+
+    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = (v.ammatti || "palveluala") + "_esitelma.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  /* ========= AUTOSAVE ========= */
+  window.initAmmattiAutosave = function () {
+    const fields = document.querySelectorAll("#passages .lomake-ryhma textarea");
+    if (!fields.length) return;
+
+    let saved = [];
+    try { saved = JSON.parse(localStorage.getItem(AUTOSAVE_KEY) || "[]"); } catch(e){}
+
+    fields.forEach((f,i) => f.value = saved[i] || "");
+
+    fields.forEach((field,i)=>{
+      field.addEventListener("input", ()=>{
+        const data = Array.from(fields).map(f=>f.value);
+        localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(data));
+        ["tyotehtavat","tyopaikat","tyoajat","opiskelupaikat","omaPerustelu"]
+          .forEach((k,j)=> State.variables[k] = data[j] || "");
+      });
+    });
+  };
+
+  /* ========= TYHJENNÄ ========= */
+  window.resetAmmattitutkimus = function () {
+    document.querySelectorAll("#passages textarea").forEach(t=>t.value="");
+    ["tyotehtavat","tyopaikat","tyoajat","opiskelupaikat","omaPerustelu","ammatti"]
+      .forEach(k=>State.variables[k]="");
+    localStorage.removeItem(AUTOSAVE_KEY);
+    alert("Vastaukset tyhjennetty.");
+  };
+
 })();
 
-
-
-/* LOMAKKEEN VASTAUSTEN LATAUS TXT-TIEDOSTONA */
-
-window.downloadAmmattitutkimus = function () {
-  const v = State.variables;
-
-  const lines = [
-    "AMMATTITUTKIMUS – VASTAUKSET",
-    "==============================",
-    "",
-    "Valittu ammatti:",
-    (v.ammattiNimi || ""),
-    "",
-    "KOULUTUSPOLKU AMMATTIIN:",
-    (v.koulutusPolku || ""),
-    "",
-    "TYÖTEHTÄVÄT:",
-    (v.tyotehtavat || ""),
-    "",
-    "MAHDOLLISET TYÖPAIKAT:",
-    (v.tyopaikat || ""),
-    "",
-    "AMMATISSA TARVITTAVAT VAHVUUDET:",
-    (v.vahvuudet || ""),
-    "",
-    "HYVÄT PUOLET:",
-    (v.hyvatPuolet || ""),
-    "",
-    "HAASTEET:",
-    (v.haasteet || ""),
-    "",
-    "PALKKAUS:",
-    (v.palkkaus || ""),
-    "",
-    "OMA YHTEENVETO:",
-    (v.yhteenvetoOmaNakyma || ""),
-    "",
-    "------------------------------",
-    "Luotu interaktiivisesta ammattitutkimus-tehtävästä."
-  ].join("\n");
-
-  const blob = new Blob([lines], { type: "text/plain;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-
-  a.href = url;
-  a.download = "ammattitutkimus_vastaukset.txt";
-
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-};
 
 /* Poistu-painike (sulje välilehti) */
 
@@ -704,14 +747,13 @@ window.confirmExitStory = function () {
 };
 </script><tw-passagedata pid="1" name="StoryInit" tags="" position="725,50" size="100,100">&lt;&lt;script&gt;&gt;
 State.reset();
-Engine.play(&quot;start&quot;);
+Engine.play(&quot;Kansi&quot;);
 &lt;&lt;/script&gt;&gt;
 
 &lt;&lt;set $score = 0&gt;&gt;
 
 &lt;&lt;set $hideNavbar = true&gt;&gt;
 &lt;&lt;set $hideNavbar = false&gt;&gt;
-
 
 
 /* Ammattitutkimus-lomakkeen kentät */
@@ -1210,21 +1252,31 @@ Voit käyttää apuna koulun materiaaleja, nettiä tai kysyä opettajalta.
 &lt;&lt;link &quot;Turvallisuusvalvoja&quot;&gt;&gt;&lt;&lt;set $ammatti = &quot;Turvallisuusvalvoja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="29" name="Ammattitehtävä" tags="" position="850,475" size="100,100">
-&lt;h2&gt;Esitelmä ammatista: $ammatti&lt;/h2&gt;
+</tw-passagedata><tw-passagedata pid="29" name="Ammattitehtävä" tags="" position="850,475" size="100,100">&lt;&lt;script&gt;&gt;
+setTimeout(initAmmattiAutosave, 100);
+&lt;&lt;/script&gt;&gt;
 
-&lt;p&gt;Täytä alle tiedot valitsemastasi ammatista.&lt;/p&gt;
-&lt;p&gt;Vastaa kohtiin mahdollisimman konkreettisesti ja &lt;strong&gt;omin sanoin&lt;/strong&gt;. &lt;br&gt;Lopuksi saat vastauksistasi yhteenvedon, jonka voit ladata tiedostona ja kopioida Google Docsiin tai Google Slidesiin viimeistelyä varten.&lt;/p&gt;
+&lt;h2&gt;Esitelmä ammatista: &lt;&lt;print $ammatti&gt;&gt;&lt;/h2&gt;
+
+&lt;div class=&quot;info-text&quot;&gt;
+  &lt;p&gt;&lt;strong&gt;Tutustu ensin palvelualan koulutuksiin ennen kuin aloitat oman ammattitehtäväsi.&lt;/strong&gt;&lt;/p&gt;
+  &lt;div class=&quot;intro-nappi&quot;&gt;[[Tutustu palvelualan koulutuksiin-&gt;Oppilaitokset]]&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+Vastaa kysymyksiin mahdollisimman konkreettisesti ja &lt;strong&gt;omin sanoin&lt;/strong&gt;.&lt;br&gt;
+Lopuksi saat vastauksistasi yhteenvedon, jonka voit ladata tiedostona ja viimeistellä Google Docsissa tai Slidesissa.
+&lt;/p&gt;
 
 &lt;div class=&quot;lomake-ryhma&quot;&gt;
 &lt;p&gt;&lt;strong&gt;Mitä tässä ammatissa tehdään?&lt;/strong&gt;&lt;/p&gt;
 &lt;textarea placeholder=&quot;Kirjoita omin sanoin...&quot;&gt;&lt;/textarea&gt;
 
 &lt;p&gt;&lt;strong&gt;Missä töitä tehdään?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea placeholder=&quot;Esim. yritykset, hotellit, koulut, liikuntapaikat...&quot;&gt;&lt;/textarea&gt;
+&lt;textarea placeholder=&quot;Esim. yritykset, hotellit, ravintolat, kaupat...&quot;&gt;&lt;/textarea&gt;
 
 &lt;p&gt;&lt;strong&gt;Millaista työaika on?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea placeholder=&quot;Päivätyö, iltatyö, vuorotyö...&quot;&gt;&lt;/textarea&gt;
+&lt;textarea placeholder=&quot;Päivätyö, vuorotyö, iltatyö, viikonloput...&quot;&gt;&lt;/textarea&gt;
 
 &lt;p&gt;&lt;strong&gt;Missä tätä ammattia voi opiskella?&lt;/strong&gt;&lt;/p&gt;
 &lt;textarea placeholder=&quot;Oppilaitokset, kaupungit...&quot;&gt;&lt;/textarea&gt;
@@ -1233,18 +1285,25 @@ Voit käyttää apuna koulun materiaaleja, nettiä tai kysyä opettajalta.
 &lt;textarea placeholder=&quot;Omat ajatukset...&quot;&gt;&lt;/textarea&gt;
 &lt;/div&gt;
 
-&lt;div class=&quot;intro-nappi&quot;&gt;
+&lt;div class=&quot;intro-nappi action-row&quot;&gt;
 
-  &lt;a href=&quot;javascript:void(0)&quot;
-     class=&quot;macro-link&quot;
-     onclick=&quot;downloadAmmattitutkimus()&quot;&gt;
-    Lataa vastaukset tiedostona
-  &lt;/a&gt;
+&lt;a class=&quot;macro-link btn-primary&quot;
+   href=&quot;javascript:void(0)&quot;
+   onclick=&quot;downloadAmmattitutkimus()&quot;&gt;
+   Lataa vastaukset
+&lt;/a&gt;
 
-  [[Valmis-&gt;Loppu]]
+&lt;a class=&quot;macro-link btn--danger&quot;
+   href=&quot;javascript:void(0)&quot;
+   onclick=&quot;resetAmmattitutkimus()&quot;&gt;
+   Tyhjennä
+&lt;/a&gt;
+&lt;&lt;link &quot;Loppusanat&quot;&gt;&gt;
+  &lt;&lt;goto &quot;Loppu&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+
 
 &lt;/div&gt;
-
 </tw-passagedata><tw-passagedata pid="30" name="Loppu" tags="" position="850,600" size="100,100">
 &lt;h2&gt;Hyvä!&lt;/h2&gt;
 
@@ -1253,19 +1312,14 @@ Olet pohtinut omaa kiinnostustasi palvelualan ammatteihin. Voit näyttää vasta
 &lt;/p&gt;
 
 &lt;div class=&quot;intro-nappi&quot;&gt;
-  [[Tutustu oppilatoksiin-&gt;Oppilaitokset]]
-  
-  &lt;a href=&quot;javascript:void(0)&quot;
-   class=&quot;macro-link btn--danger&quot;
-   onclick=&quot;window.close();&quot;&gt;
-   Poistu
-&lt;/a&gt;
+    &lt;&lt;link &quot;Poistu&quot;&gt;&gt;
+  &lt;&lt;goto &quot;Kansi&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;</tw-passagedata><tw-passagedata pid="31" name="Oppilaitokset" tags="" position="850,325" size="100,100">
 &lt;h2&gt;Palvelualan koulutukset&lt;/h2&gt;
 
 &lt;p&gt;
-Palvelualan ammatteihin voi opiskella monissa oppilaitoksissa.
-Tässä on esimerkkejä kouluista ja linkit, joista voit lukea lisää.
+Palvelualan ammatteihin voi opiskella monissa oppilaitoksissa. Tällä sivulla listatut koulutukset ja oppilaitokset ovat esimerkkejä. Koulutustarjonta ja hakukohteet voivat muuttua. Varmista ajantasaiset tiedot aina omalta opinto-ohjaajaltasi sekä oppilaitosten omilta verkkosivuilta.
 &lt;/p&gt;
 
 &lt;div class=&quot;school-card&quot;&gt;
@@ -1305,7 +1359,9 @@ Tässä on esimerkkejä kouluista ja linkit, joista voit lukea lisää.
 &lt;/div&gt;
 
 &lt;div class=&quot;intro-nappi&quot;&gt;
-  [[Palaa alkuun-&gt;start]]
+    &lt;&lt;link &quot;Tehtävään&quot;&gt;&gt;
+  &lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
 </tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
