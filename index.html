@@ -629,6 +629,32 @@ iframe #passages a {
   font-size: 0.95rem;
   color: #1F2A33;                     /* sama kuin text-main */
 }
+/* ===== TESTI – NAPIT YHDELLE RIVILLE & PIENEMMÄT ===== */
+
+iframe #passages .answer-group {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  flex-wrap: nowrap !important;
+  width: auto !important;
+}
+
+/* estä koko rivin levyiset napit */
+iframe #passages .answer-group a {
+  display: inline-flex !important;
+  width: auto !important;
+  min-width: 110px !important;
+  max-width: max-content !important;
+  padding: 0.55rem 1.1rem !important;
+  font-size: 0.9rem !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  border-radius: 999px !important;
+}
 </style><script role="script" id="twine-user-script" type="text/twine-javascript">/* ========= PALVELUALA NAVBAR (GOOGLE SITES SAFE) ========= */
 
 $(document).on(":passagestart", function (event) {
@@ -745,6 +771,23 @@ window.confirmExitStory = function () {
     window.close();
   }
 };
+/* ========= SITES-SAFE SCORE ENGINE ========= */
+
+window.getScore = function () {
+  return parseInt(localStorage.getItem("palvelu_score") || "0", 10);
+};
+
+window.setScore = function (n) {
+  localStorage.setItem("palvelu_score", n);
+};
+
+window.addScore = function (n) {
+  setScore(getScore() + n);
+};
+
+window.resetScore = function () {
+  setScore(0);
+};
 </script><tw-passagedata pid="1" name="StoryInit" tags="" position="725,50" size="100,100">&lt;&lt;script&gt;&gt;
 State.reset();
 Engine.play(&quot;Kansi&quot;);
@@ -775,20 +818,19 @@ Engine.play(&quot;Kansi&quot;);
   osa2: {},
   osa3: {}
 }&gt;&gt;
-</tw-passagedata><tw-passagedata pid="2" name="Kysymys 1" tags="" position="400,450" size="100,100">
-&lt;h2&gt;Kysymys 1 / 10&lt;/h2&gt;
+</tw-passagedata><tw-passagedata pid="2" name="Kysymys 1" tags="" position="400,450" size="100,100">&lt;h2&gt;Kysymys 1 / 10&lt;/h2&gt;
 
 &lt;p&gt;Pidänkö ihmisten auttamisesta ja palvelemisesta?&lt;/p&gt;
 
 &lt;div class=&quot;answer-group&quot;&gt;
 
 &lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Kysymys 2&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Kysymys 2&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
@@ -810,7 +852,8 @@ Palveluala on laaja ammattiala, jossa työtehtävät liittyvät erilaisten palve
     [[Sopiiko palveluala sinulle? – Testaa tästä-&gt;Ammattitesti: alku]]
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="4" name="Ammattitesti: alku" tags="" position="400,325" size="100,100">
+</tw-passagedata><tw-passagedata pid="4" name="Ammattitesti: alku" tags="" position="400,325" size="100,100">&lt;&lt;script&gt;&gt;resetScore();&lt;&lt;/script&gt;&gt;
+
 &lt;h1&gt;Elintarvikeala – sopiiko se minulle?&lt;/h1&gt;
 
 &lt;p&gt;
@@ -853,20 +896,19 @@ $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 
       &lt;/div&gt;
 &lt;/a&gt;
-</tw-passagedata><tw-passagedata pid="7" name="Kysymys 2" tags="" position="400,575" size="100,100">
-&lt;h2&gt;Kysymys 2 / 10&lt;/h2&gt;
+</tw-passagedata><tw-passagedata pid="7" name="Kysymys 2" tags="" position="400,575" size="100,100">&lt;h2&gt;Kysymys 2 / 10&lt;/h2&gt;
 
 &lt;p&gt;Tuleeko minun yleensä toimeen erilaisten ihmisten kanssa?&lt;/p&gt;
 
 &lt;div class=&quot;answer-group&quot;&gt;
 
 &lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Kysymys 3&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Kysymys 3&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
@@ -875,20 +917,19 @@ $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;&lt;/link&gt;&gt;
 
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="8" name="Kysymys 3" tags="" position="400,700" size="100,100">
-&lt;h2&gt;Kysymys 3 / 10&lt;/h2&gt;
+</tw-passagedata><tw-passagedata pid="8" name="Kysymys 3" tags="" position="400,700" size="100,100">&lt;h2&gt;Kysymys 3 / 10&lt;/h2&gt;
 
 &lt;p&gt;Pystynkö olemaan ystävällinen myös silloin, kun toinen on kiireinen tai ärsyyntynyt?&lt;/p&gt;
 
 &lt;div class=&quot;answer-group&quot;&gt;
 
 &lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Kysymys 4&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Kysymys 4&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
@@ -905,12 +946,12 @@ $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;div class=&quot;answer-group&quot;&gt;
 
 &lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Kysymys 5&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Kysymys 5&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
@@ -927,12 +968,12 @@ $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;div class=&quot;answer-group&quot;&gt;
 
 &lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Kysymys 6&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Kysymys 6&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
@@ -941,19 +982,20 @@ $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;&lt;/link&gt;&gt;
 
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="11" name="Kysymys 6" tags="" position="400,1075" size="100,100">&lt;h2&gt;Kysymys 6 / 10&lt;/h2&gt;
+</tw-passagedata><tw-passagedata pid="11" name="Kysymys 6" tags="" position="400,1075" size="100,100">
+&lt;h2&gt;Kysymys 6 / 10&lt;/h2&gt;
 
 &lt;p&gt;Pystynkö tulemaan ajoissa ja pitämään kiinni sovituista asioista?&lt;/p&gt;
 
 &lt;div class=&quot;answer-group&quot;&gt;
 
 &lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Kysymys 7&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Kysymys 7&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
@@ -970,12 +1012,12 @@ $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;div class=&quot;answer-group&quot;&gt;
 
 &lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Kysymys 8&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Kysymys 8&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
@@ -992,12 +1034,12 @@ $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;div class=&quot;answer-group&quot;&gt;
 
 &lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Kysymys 9&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Kysymys 9&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
@@ -1014,12 +1056,12 @@ $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;div class=&quot;answer-group&quot;&gt;
 
 &lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Kysymys 10&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Kysymys 10&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
@@ -1036,12 +1078,12 @@ $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;div class=&quot;answer-group&quot;&gt;
 
 &lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Tulos&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
 &lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
+  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
   &lt;&lt;goto &quot;Tulos&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 
@@ -1050,7 +1092,8 @@ $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;&lt;/link&gt;&gt;
 
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="16" name="Tulos" tags="" position="400,1700" size="100,100">
+</tw-passagedata><tw-passagedata pid="16" name="Tulos" tags="" position="400,1700" size="100,100">&lt;&lt;script&gt;&gt;State.variables.score = getScore();&lt;&lt;/script&gt;&gt;
+
 &lt;h1&gt;Tuloksesi&lt;/h1&gt;
 
 &lt;p&gt;Sait &lt;strong&gt;$score / 20 pistettä&lt;/strong&gt;.&lt;/p&gt;
