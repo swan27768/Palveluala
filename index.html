@@ -429,27 +429,30 @@ body.hide-navbar .navbar-fixed {
 }
 
 /* ============================================================
-   8. KANSISIVU
+   8. KANSISIVU – JULISTE (PALVELUALA)
    ============================================================ */
 
-.cover-page {
-  width: 100vw;
-  height: 100vh;
+#passages .passage .cover-link {
+  position: fixed !important;
+  inset: 0 !important;
+  display: flex !important;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center !important;
+  align-items: center !important;
 
-  background: var(--bg-body);
-  cursor: pointer;
+  background:
+    linear-gradient(rgba(238,243,247,0.90), rgba(238,243,247,0.90)),
+    url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=2400&q=80");
+
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+
+  text-decoration: none !important;
+  cursor: pointer !important;
+  z-index: 10000 !important;
 }
 
-.cover-title {
-  font-size: clamp(3rem, 8vw, 5.5rem);
-  font-weight: 800;
-  color: var(--accent-1);
-  text-align: center;
-}
 a.macro-link.btn--danger {
   background: var(--danger-bg) !important;
   border-color: #4A1414 !important;
